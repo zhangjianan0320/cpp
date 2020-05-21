@@ -56,6 +56,8 @@ class Box
 	//protected 外部不能直接访问，但是子孙类可以访问
 	protected:
 		int class_type;
+	//友元函数
+	friend void printName(Box &box);
 };
 //构造函数 冒号后边的类似于直接定义名字与以下的注释效果一致
 // 使用的时候要注意顺序，初始化的时候是按照声明的顺序初始化的，而不是按照初始化列表中的顺序
@@ -67,7 +69,7 @@ class Box
 //}
 Box::Box(double a,double b,double c):length(a),breadth(b),height(c)
 {
-	printf("Box::Box\n");
+//	printf("Box::Box\n");
 }
 //使用现有对象创建对象的时候会调用拷贝构造函数
 //1、可以读取出相同类对象的私有成员数据
@@ -77,7 +79,7 @@ Box::Box(double a,double b,double c):length(a),breadth(b),height(c)
 //5、使用默认拷贝构造函数的时候，则会得到的对象存储空间地址会与原对象一致，在编写深拷贝构造函数时，为新的对象也申请堆，内存空间，并把原对象的数据复制过来
 Box::Box(const Box &obj)
 {
-	cout<<"调用拷贝构造函数"<<endl;
+//	cout<<"调用拷贝构造函数"<<endl;
 	this->length = obj.length;
 	this->breadth = obj.breadth;
 	this->height = obj.height;
@@ -85,7 +87,7 @@ Box::Box(const Box &obj)
 //析构函数 没有入参和返回值
 Box::~Box(void)
 {
-	printf("Box::~Box\n");
+//	printf("Box::~Box\n");
 }
 int Box::setName(const char *str)
 {
@@ -96,9 +98,19 @@ int Box::setName(const char *str)
 int Box::getName(char *str)
 {
 	strcpy(str,name);
-//	cout<<"name is"<<name<<endl;
+	cout<<"name is "<<str<<endl;
 }
-
+/*
+*友元函数是定义在类外部，但是有权访问类的所有私有 保护成员，尽管友元函数的原型在类的定义中出现过，但是友原函数并不是成员函数
+* 友元函数也可以是一个类，该类被称为友元类，整个类及所有成员都是友元
+* 定义友元类 使用关键字 friend
+*/
+void printName(Box &box)
+{
+	printf("frined name is %s\n",box.name);		//直接使用参数，不需要考虑变量的属性,都可以直接访问
+	//printf("friend breadth is %f\n",box.breadth);
+	
+}
 int main()
 {
 	Box box1(1,2,3);
@@ -114,6 +126,10 @@ int main()
 	box1.getName(name);
 	box1.setName("sencond name");
 	box1.getName(name);
+
+	printName(box1);
+	box2.getName(name);
+	printName(box2);
 
 	Box box3 = box1;
 	box3.printAll();
