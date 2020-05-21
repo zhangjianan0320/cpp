@@ -36,6 +36,17 @@ class Box
 		double height;
 		int setName(const char *str);
 		int getName(char *str);
+		int printAll(void)
+		{
+			//对象创建的时候会创建一个特殊的指针  this ，指向对象本身
+			printf("length is %f\n",this->length);
+			printf("breadth is %f\n",this->breadth);
+			printf("height is %f\n",this->height);
+		};
+		//构造函数 名字与class一样  创建class的时候默认调用，主要初始化变量 构造的时候也可以不带参数
+		Box(double a,double b,double c);
+		//析构函数 名字与class一样，但是要在前边加波浪号
+		~Box(void);
 	//private 外部不能直接访问，但是class内部的函数可以访问
 	private:
 		char name[512];
@@ -43,7 +54,23 @@ class Box
 	protected:
 		int class_type;
 };
-
+//构造函数 冒号后边的类似于直接定义名字与以下的注释效果一致
+// 使用的时候要注意顺序，初始化的时候是按照声明的顺序初始化的，而不是按照初始化列表中的顺序
+//Box::Box(double a,double b,double c)
+//{
+//	length = a;
+//	breadth = b;
+//	height = c;
+//}
+Box::Box(double a,double b,double c):length(a),breadth(b),height(c)
+{
+	printf("Box::Box\n");
+}
+//析构函数 没有入参和返回值
+Box::~Box(void)
+{
+	printf("Box::~Box\n");
+}
 int Box::setName(const char *str)
 {
 	//name 为class private变量，但是在class内的函数是可以直接调用的，但是其他地方则无法直接调用
@@ -53,19 +80,19 @@ int Box::setName(const char *str)
 int Box::getName(char *str)
 {
 	strcpy(str,name);
-	cout<<"name is"<<name<<endl;
+//	cout<<"name is"<<name<<endl;
 }
 
 int main()
 {
-	Box box1;
-	Box box2;
+	Box box1(1,2,3);
+	Box box2(4,5,6);
+
+	box1.printAll();
+	box2.printAll();
 
 	box1.height = 100;
 	box2.height = 200;
-
-	cout<<"box1 is "<<box1.height<<endl;
-	cout<<"box2 is "<<box2.height<<endl;
 
 	char name[512];
 	box1.getName(name);
