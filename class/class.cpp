@@ -45,6 +45,9 @@ class Box
 		};
 		//构造函数 名字与class一样  创建class的时候默认调用，主要初始化变量 构造的时候也可以不带参数
 		Box(double a,double b,double c);
+		Box(void){};//不带参数的构造函数
+		//拷贝构造函数
+		Box(const Box &obj);
 		//析构函数 名字与class一样，但是要在前边加波浪号
 		~Box(void);
 	//private 外部不能直接访问，但是class内部的函数可以访问
@@ -66,6 +69,14 @@ Box::Box(double a,double b,double c):length(a),breadth(b),height(c)
 {
 	printf("Box::Box\n");
 }
+//使用现有对象创建对象的时候会调用拷贝构造函数
+Box::Box(const Box &obj)
+{
+	cout<<"调用拷贝构造函数"<<endl;
+	this->length = obj.length;
+	this->breadth = obj.breadth;
+	this->height = obj.height;
+}
 //析构函数 没有入参和返回值
 Box::~Box(void)
 {
@@ -86,7 +97,7 @@ int Box::getName(char *str)
 int main()
 {
 	Box box1(1,2,3);
-	Box box2(4,5,6);
+	Box box2;
 
 	box1.printAll();
 	box2.printAll();
@@ -98,6 +109,9 @@ int main()
 	box1.getName(name);
 	box1.setName("sencond name");
 	box1.getName(name);
+
+	Box box3 = box1;
+	box3.printAll();
 
 	return 0;
 }
