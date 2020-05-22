@@ -31,11 +31,19 @@ class Box
 {
 	//public 外部可以直接访问的变量或函数
 	public:
+		//静态成员在所有的对象中是共享的，如果不存在其他的初始化，在创建第一个对象的时候会初始化为0, 静态变量不能用this指针访问
+		static int objectCount;
 		double length;
 		double breadth;
 		double height;
 		int setName(const char *str);
 		int getName(char *str);
+		//静态成员函数，静态变量函数内只能访问静态变量 
+		static int getObjectCount(void)
+		{
+			cout<<"object count is "<<objectCount<<endl;
+			return objectCount;
+		}
 		int printAll(void)
 		{
 			//对象创建的时候会创建一个特殊的指针  this ，指向对象本身
@@ -45,7 +53,7 @@ class Box
 		};
 		//构造函数 名字与class一样  创建class的时候默认调用，主要初始化变量 构造的时候也可以不带参数
 		Box(double a,double b,double c);
-		Box(void){};//不带参数的构造函数
+		Box(void){objectCount++;};//不带参数的构造函数
 		//拷贝构造函数
 		Box(const Box &obj);
 		//析构函数 名字与class一样，但是要在前边加波浪号
@@ -69,6 +77,7 @@ class Box
 //}
 Box::Box(double a,double b,double c):length(a),breadth(b),height(c)
 {
+	objectCount++;
 //	printf("Box::Box\n");
 }
 //使用现有对象创建对象的时候会调用拷贝构造函数
@@ -79,6 +88,7 @@ Box::Box(double a,double b,double c):length(a),breadth(b),height(c)
 //5、使用默认拷贝构造函数的时候，则会得到的对象存储空间地址会与原对象一致，在编写深拷贝构造函数时，为新的对象也申请堆，内存空间，并把原对象的数据复制过来
 Box::Box(const Box &obj)
 {
+	objectCount++;
 //	cout<<"调用拷贝构造函数"<<endl;
 	this->length = obj.length;
 	this->breadth = obj.breadth;
@@ -123,12 +133,19 @@ inline int Max(int a,int b)
 {
 	return (a>b) ? a : b;
 }
+//静态变量在内存中只是声明，没有定义，因此要在类的外边定义，实际上是给静态成员变量分配内存，如果不加定义就会报错，初始化是一赋一个初始值，而定义是分配内存
+int Box::objectCount = 0;
 
 int main()
 {
+	//使用静态变量可以获取或者了解构造与析构函数的调用情况，且 静态变量和静态函数直接使用类名就可以调用
+	Box::getObjectCount();
 	Box box1(1,2,3);
+
+	Box::getObjectCount();
 	Box box2;
 
+	Box::getObjectCount();
 	box1.printAll();
 	box2.printAll();
 
@@ -145,6 +162,8 @@ int main()
 	printName(box2);
 
 	Box box3 = box1;
+	Box::getObjectCount();
+
 	box3.printAll();
 
 	return 0;
