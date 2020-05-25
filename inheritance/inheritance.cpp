@@ -54,7 +54,21 @@ class Rectangle:public Shape,public PaintCost
 			return width*height;
 		}
 };
-
+/*
+ *虚继承 virtual 
+ *是为了处理多继承（环状继承问题的）
+ *class D{};
+ *class B:public D{};
+ *class A:public D{};
+ *class C:public A,public B{};
+ *此时C包含了两份D的内容
+ *
+ *class D{};
+ *class B:virtual public D{};
+ *class A:virtual public D{};
+ *class C:public A,public B{};
+ *使用虚继承可以避免C包含两份D内容，但是实际使用的时候要避免出现多继承或环状继承的问题
+ * */
 
 int main(void)
 {
