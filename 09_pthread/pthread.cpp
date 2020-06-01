@@ -10,10 +10,60 @@
 #include<pthread.h>
 #include<unistd.h>
 #include<stdio.h>
+#include<thread>
 using namespace std;
 
 #define NUM_THREADS	5
+#if 0
+//编译的时候必须g++ -std=c++11
+void *PrintHello(int id)
+{
+	printf("pthread %d start\n",id);
+	sleep(id);
+	printf("pthread %d end\n",id);
+	//退出线程
+	long long ack = id;	//64位系统 地址的长度是64，为了与返回值保持一致，因此定义成long long型
+	// 此处两种退出方式都会把参数传出去，通过pthrea_join函数获取到
+	pthread_exit((void*)(ack));
+//	return (void*)ack;
+}
 
+int main(int argc, const char** argv) {
+
+// 假设buy是一个可调用的函数对象，它即可能是函数指针，也可能是函数对象
+//std::thread Annie(buy);
+// Annie会去执行buy()
+//std::thread Bob(buy, book, food);
+// Bob会去执行buy(book, food)
+ 
+// 假设buy是Consumer的一个可调用的成员函数
+//Consumer Clara;
+//std::thread action(buy, Clara, phone);
+// Clara会去执行Consumer.buy(phone)
+
+	std::thread thread0(PrintHello,0); 
+	std::thread thread1(PrintHello,1); 
+	std::thread thread2(PrintHello,2); 
+	std::thread thread3(PrintHello,3); 
+	std::thread thread4(PrintHello,4);
+//剥离后执行子线程
+	thread0.detach();
+	thread1.detach();
+	thread2.detach();
+	thread3.detach();
+	thread4.detach();
+/*
+//顺序执行子线程
+	thread0.join();
+	thread1.join();
+	thread2.join();
+	thread3.join();
+	thread4.join();
+*/
+	pthread_exit(NULL);
+}
+#endif
+#if 1
 void *PrintHello(void *threadid)
 {
 	int id = *((int *)threadid);
@@ -28,9 +78,9 @@ void *PrintHello(void *threadid)
 	pthread_exit((void*)(ack));
 //	return (void*)ack;
 }
-
 int main()
 {
+	//使用c函数的方式实现
 	pthread_t threads[NUM_THREADS];
 	int index[NUM_THREADS];
 	int rc,i;
@@ -66,6 +116,6 @@ int main()
 	//为了保证子线程总能完整执行，1、主线程中调用pthread_join对齐等待；2、主线程中使用pthread_exit只退出主线程；3、通过逻辑保证子线程不会比子线程先退出；
 	sleep(10);
 	printf("main is end\n");
-
 	return 0;
 }
+#endif

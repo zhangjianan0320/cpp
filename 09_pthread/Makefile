@@ -5,7 +5,7 @@ SOURCE=$(wildcard *.cpp)
 #patsubst 替换所有的cpp 为 o
 OBJECT=$(patsubst %cpp,%o,$(SOURCE))
 $(TARGET):$(SOURCE)
-	$(CC) $(SOURCE) -o $@ -lpthread
+	$(CC) $(SOURCE) -o $@ -lpthread -std=c++11
 
 clean:
 	rm edit
