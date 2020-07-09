@@ -17,11 +17,15 @@ class Shape{
 			width = w;
 			height = h;
 		}
-		virtual int area()
+//虚函数，派生类继承时可以不重写该函数
+/*		virtual int area()
 		{
 			cout<<"Parent class area:"<<endl;
 			return 0;
 		}
+*/
+//纯虚函数，派生类中必须重写，否则派生类也是个虚基类，而虚基类不能定义对象
+		virtual int area() =0;
 };
 
 class Rectange:public Shape
@@ -53,11 +57,13 @@ int main()
 
 	rec.area();
 	tri.area();
-//	如果要使如下的调用方式，需要设置 20行为虚函数  virtual int area()
+//	如果要使如下的调用方式，需要设置 20行为虚函数  virtual int area()  纯虚函数不可以这么使用
+/*
 	Shape *shape;
 	shape = &rec;
 	shape->area();
 
 	Shape temp(5,5);
 	temp.area();
+*/
 }
